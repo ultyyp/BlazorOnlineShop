@@ -5,17 +5,8 @@
 	<h1>Welcome to our online shop BlazorOnlineShop</h1>
 	<hr style="height:3px; background-color:black; border:none;" />
 	<h2> Current time: (@time) </h2>
-	<button onclick="@GoToCatalog" style="border-radius:5px; color:white; background-color:darkred; align-self:center; margin:30px;">Open Catalog</button>
+	<button @onclick="GoToCatalog" style="border-radius:5px; color:white; background-color:darkred; align-self:center; margin:30px;">Open Catalog</button>
 </div>
-
-
-@functions{
-	public Task GoToCatalog()
-	{
-		_navigationManager.NavigateTo($"/catalog");
-		return Task.CompletedTask;
-	}
-}
 
 @code{
 	DateTime time = DateTime.Now;
@@ -34,6 +25,12 @@
 			}
 
 		});
+		return Task.CompletedTask;
+	}
+
+	public Task GoToCatalog()
+	{
+		_navigationManager.NavigateTo($"/catalog");
 		return Task.CompletedTask;
 	}
 }
