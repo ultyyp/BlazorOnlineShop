@@ -1,0 +1,39 @@
+﻿@page "/"
+@inject NavigationManager _navigationManager
+
+<div style="text-align:center; background-color:gold; border-radius:5px; padding:20px;">
+	<h1>Welcome to our online shop BlazorOnlineShop</h1>
+	<hr style="height:3px; background-color:black; border:none;" />
+	<h2> Current time: (@time) </h2>
+	<button onclick="@GoToCatalog" style="border-radius:5px; color:white; background-color:darkred; align-self:center; margin:30px;">Open Catalog</button>
+</div>
+
+
+@functions{
+	public Task GoToCatalog()
+	{
+		_navigationManager.NavigateTo($"/catalog");
+		return Task.CompletedTask;
+	}
+}
+
+@code{
+	DateTime time = DateTime.Now;
+	CancellationToken cts = new();
+
+	protected override Task OnInitializedAsync()
+	{
+		Task.Run(async () =>
+		{
+			var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+
+			while (await timer.WaitForNextTickAsync(cts))
+			{
+				time = DateTime.Now;
+				await InvokeAsync(StateHasChanged);
+			}
+
+		});
+		return Task.CompletedTask;
+	}
+}
