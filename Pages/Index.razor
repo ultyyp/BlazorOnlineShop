@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject NavigationManager _navigationManager
+@implements IDisposable
 
 <div style="text-align:center; background-color:gold; border-radius:5px; padding:20px;">
 	<h1>Welcome to our online shop BlazorOnlineShop</h1>
@@ -10,7 +11,7 @@
 
 @code{
 	DateTime time = DateTime.Now;
-	CancellationToken cts = new();
+	CancellationTokenSource cts = new CancellationTokenSource();
 
 	protected override Task OnInitializedAsync()
 	{
@@ -18,7 +19,7 @@
 		{
 			var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
 
-			while (await timer.WaitForNextTickAsync(cts))
+			while (await timer.WaitForNextTickAsync(cts.Token))
 			{
 				time = DateTime.Now;
 				await InvokeAsync(StateHasChanged);
@@ -32,5 +33,10 @@
 	{
 		_navigationManager.NavigateTo($"/catalog");
 		return Task.CompletedTask;
+	}
+
+	public void Dispose()
+	{
+		cts.Cancel();
 	}
 }
